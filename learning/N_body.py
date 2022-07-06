@@ -3,11 +3,10 @@ from math import pi as PI
 import taichi as ti
 
 ti.init(ti.gpu)
-paused = ti.field(ti.i32, ())  # ??
 
 
 G = 9.8  # 引力常数
-N = 1000  # 星球数量
+N = 500  # 星球数量
 galaxy = [0.5, 0.3, 0.4]  # 星系大小（缩放，偏移，大小）
 init_vel = 120  # 初始速度
 color = np.array([0xFFFFFF, 0xFFFFCC, 0xFFFF99, 0xFFFF66, 0xFFFF33, 
@@ -43,13 +42,17 @@ def compute_force():
         force[i] = ti.Vector([0.0, 0.0])  # 清除力
     # 重新计算万有引力
     for i in range(N):
-        for j in range(N):
-            if i != j:
-                diff = pos[i] - pos[j]
-                r = diff.norm(1e-5)
-                f = -G * (m[i] * m[j]) * (1.0 / r) ** 3 * diff
-                force[i] += f
+        _compute_force(i)
 
+@ti.func
+def _compute_force(i: ti.i32):
+    # 利用外层循环加速
+    for j in range(N):
+        if i != j:
+            diff = pos[i] - pos[j]
+            r = diff.norm(1e-5)
+            f = -G * (m[i] * m[j]) * (1.0 / r) ** 3 * diff
+            force[i] += f
 
 @ti.kernel
 def update():
@@ -61,6 +64,7 @@ def update():
 
 gui = ti.GUI("N-body problem", (640, 640))
 initialize()
+
 while gui.running:
     for i in range(substepping):
         compute_force()

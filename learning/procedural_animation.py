@@ -7,6 +7,7 @@ n = 512  # 画布大小
 canvas = ti.Vector.field(3, dtype=ti.f32, shape=(n, n))
 gui = ti.GUI("Classroom homework", (n, n))
 
+
 @ti.func
 def frac(x):
     return x - ti.floor(x)
@@ -33,7 +34,9 @@ def paint(t: ti.f32):
             color += levels_c
         canvas[_i, _j] = color
 
+
 t = 0.0
+
 while True:
     t += 0.1
     paint(t)
