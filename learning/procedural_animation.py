@@ -19,7 +19,7 @@ def paint(t: ti.f32):
         levels = 7
         for k in range(levels):
             block_size = 2 * 2 ** k
-            # TODO:ij移动到k外面为什么不行
+            # ij不能移动到k外面，因为外面是并行操作
             i = _i + t
             j = _j + t
             p = i % block_size / block_size
@@ -31,6 +31,7 @@ def paint(t: ti.f32):
             c = frac(ti.sin(float(i * 19 + j * 98)) * 7 + t * 5e-3) * weight
             # TODO:每层的颜色有区别？
             levels_c = ti.Vector([((levels - k - 1) / 10 * c), ((k + 1) / 10 * c), (0.9 ** (k + 1) * c)])
+            print("levels_c:", levels_c)
             color += levels_c
         canvas[_i, _j] = color
 

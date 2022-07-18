@@ -2,7 +2,10 @@ import numpy as np
 from math import pi as PI
 import taichi as ti
 
+
 ti.init(ti.gpu)
+
+gui = ti.GUI("N-body problem", (640, 640))
 
 
 G = 9.8  # 引力常数
@@ -62,7 +65,6 @@ def update():
         pos[i] += (dt * vel[i])  # 更新位置
 
 
-gui = ti.GUI("N-body problem", (640, 640))
 initialize()
 
 while gui.running:
