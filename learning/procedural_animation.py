@@ -31,7 +31,6 @@ def paint(t: ti.f32):
             c = frac(ti.sin(float(i * 19 + j * 98)) * 7 + t * 5e-3) * weight
             # TODO:每层的颜色有区别？
             levels_c = ti.Vector([((levels - k - 1) / 10 * c), ((k + 1) / 10 * c), (0.9 ** (k + 1) * c)])
-            print("levels_c:", levels_c)
             color += levels_c
         canvas[_i, _j] = color
 
